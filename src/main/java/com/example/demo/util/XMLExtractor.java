@@ -148,7 +148,7 @@ public class XMLExtractor {
 
                     agency = (agency != null) ? agency : "0";
                     subagency = (subagency != null) ? subagency : "0";
-                    String subjectStr = (subjectJson.length() > 0) ? subjectJson.toString() : "0";
+                    JSONArray subjectStr = (subjectJson.length() > 0) ? subjectJson : new JSONArray();
                     cfr = (cfr != null) ? cfr : "0";
                     depdoc = (depdoc != null) ? depdoc : "0";
                     frdoc = (frdoc != null) ? frdoc : "0";
@@ -159,7 +159,8 @@ public class XMLExtractor {
                     java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
 
                     policyList.add(new Policy(null, type, sqlDate, dayOfWeek, agency, subagency, 
-                               subjectStr, cfr, depdoc, frdoc, bilcod, summary, contentStr));
+                               subjectStr, "", cfr, depdoc, frdoc, bilcod, summary, "", 
+                               contentStr));
                 }
             }
         }

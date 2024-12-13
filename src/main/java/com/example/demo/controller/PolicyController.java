@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+
 import java.time.LocalDate;
 
 import com.example.demo.entity.Policy;
@@ -11,6 +12,7 @@ import com.example.demo.service.PolicyService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/policies")
 public class PolicyController {
 
