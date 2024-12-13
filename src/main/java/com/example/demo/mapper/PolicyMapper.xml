@@ -10,7 +10,7 @@
         WHERE 1=1
         <!-- 如果关键词不为空，添加关键词条件 -->
         <if test="keywords != null and keywords != ''">
-            AND JSON_SEARCH(subject, 'one', CONCAT('%', #{keywords}, '%') COLLATE utf8mb4_general_ci) IS NOT NULL
+            AND chineseSubject COLLATE utf8mb4_general_ci LIKE CONCAT('%', #{keywords}, '%')
         </if>
         <!-- 如果部门不为空，添加部门条件 -->
         <if test="department != null and department != ''">

@@ -15,3 +15,11 @@ CREATE TABLE IF NOT EXISTS Policies (
         chinese_summary TEXT,
         content LONGTEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS Cases (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        type VARCHAR(50),
+        chineseSubject VARCHAR(255),
+        chineseSummary TEXT,
+        content LONGTEXT 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
