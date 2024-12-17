@@ -11,6 +11,6 @@ public class Message {//暂定，需要根据实际功能修改
     /**
      * 字符串类信息
      */
-    private String answer;
+    private String content;
 }
 

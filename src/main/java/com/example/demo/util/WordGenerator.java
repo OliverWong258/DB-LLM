@@ -1,14 +1,17 @@
 package com.example.demo.util;
 
 import java.io.*;
+import java.util.UUID;
 
 public class WordGenerator {
 
     // 静态方法，调用 Python 脚本生成 Word 文档
-    public static void generateWord(String content, String outputPath) {
+    public static String generateWord(String content) {
         try {
             // 构建命令行调用
             String pythonScriptPath = "python src/main/resources/python/save_word.py"; // 你需要根据实际情况修改脚本路径
+            String uniqueID = UUID.randomUUID().toString();
+            String outputPath = String.format("WordFiles/%s.docx", uniqueID);
             String command = pythonScriptPath + " \"" + content + "\" \"" + outputPath + "\"";
             
             // 调用 Python 脚本
@@ -34,9 +37,10 @@ public class WordGenerator {
             } else {
                 System.err.println("Error occurred while creating the Word document.");
             }
-
+            return outputPath;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+            return "";
         }
     }
 }

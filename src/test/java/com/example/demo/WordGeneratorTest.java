@@ -14,7 +14,7 @@ public class WordGeneratorTest {
             String outputPath = "output.docx";  // 输出的 Word 文件路径
             
             try{
-                WordGenerator.generateWord(content, outputPath);
+                WordGenerator.generateWord(content);
                 System.out.println("文件保存在"+outputPath);
             }catch(Exception e){
                 e.printStackTrace();

@@ -2,7 +2,8 @@ package com.example.demo.service;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.Message;
+//import com.example.demo.entity.Message;
+import com.example.demo.util.WordGenerator;
 
 @Service
 public class ReportService {
@@ -12,9 +13,9 @@ public class ReportService {
      * @param reportContent 报告内容
      * @return 下载链接
      */
-    public Message generateReport(Message reportContent) {
+    public String generateReport(String reportContent) {
         // 实现Word文档生成逻辑
-        return new Message();
+        return WordGenerator.generateWord(reportContent);
     }
 }
 
