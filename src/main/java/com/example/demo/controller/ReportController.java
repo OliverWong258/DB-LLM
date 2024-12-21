@@ -16,6 +16,7 @@ import com.example.demo.entity.Message;
 import com.example.demo.service.ReportService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/reports")
 public class ReportController {
 
