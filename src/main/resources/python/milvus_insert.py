@@ -23,7 +23,8 @@ def initialize_milvus():
     if not has_collection:
         fields = [
             FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
-            FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=768)
+            FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=768),
+            FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=65535)  # VARCHAR 类型用于存储文本
         ]
         schema = CollectionSchema(fields, "BERT sentence embeddings")
         collection = Collection(collection_name, schema)
@@ -97,7 +98,8 @@ def main():
 
             # 准备插入的数据
             entities = [
-                [embedding]  # 仅插入 embedding 字段，id 自动生成
+                [embedding],  # 仅插入 embedding 字段，id 自动生成
+                [text]        # 插入文本，便于查询时返回
             ]
 
             # 插入数据

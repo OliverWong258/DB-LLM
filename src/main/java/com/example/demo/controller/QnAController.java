@@ -2,16 +2,18 @@ package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import com.example.demo.entity.Message;
-import com.example.demo.service.QnAService;
+import com.example.demo.service.PolicyQAService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/qna")
 public class QnAController {
 
     @Autowired
-    private QnAService qnAService;
+    private PolicyQAService qnAService;
 
     /**
      * 提交用户的问题，获取政策相关的回答
@@ -19,9 +21,11 @@ public class QnAController {
      * @return 回答结果
      */
     @PostMapping("/policy")
-    public Message askPolicyQuestion(@RequestBody Message question) {
+    public ResponseEntity<Message> askPolicyQuestion(@RequestBody Message question) {
         // 调用业务逻辑层方法
-        return qnAService.processPolicyQuestion(question);
+        Message responseMsg = new Message();
+        responseMsg.setContent(qnAService.processPolicyQuestion(question.getContent()));
+        return ResponseEntity.ok(responseMsg);
     }
 }
 

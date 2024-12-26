@@ -25,7 +25,7 @@ class ChunkPrintHandler(BaseCallbackHandler):
         chunk:  None,
         **kwargs: Any,):
         global islast
-        with open(outputPath,'a') as file:
+        with open(outputPath,'a', encoding="utf-8") as file:
             file.write(str(token))
         # token 为模型生成的token
         # 可以check kwargs内容，kwargs中 llm_output中有usage相关信息， final表示是否是最后一帧

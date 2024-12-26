@@ -1,10 +1,12 @@
 package com.example.demo.util;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.UUID;
 
 public class LLMFileIO {
@@ -20,7 +22,7 @@ public class LLMFileIO {
     }
 
     public void Write(String content){
-        try (FileWriter writer = new FileWriter(requestPath, false)) { // false表示覆盖写入
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(requestPath), encoding))) {
             writer.write(content);
             System.out.println("内容已成功写入到文件：" + requestPath);
         } catch (IOException e) {

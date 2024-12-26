@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import com.example.demo.mapper.PolicyMapper;
 import com.example.demo.util.TranslateUsingApi;
 import com.example.demo.util.LLMFileIO;
 import com.example.demo.util.DeleteFilesInDirectory;
+import com.example.demo.util.MilvusAPI;
 
 @Service
 public class DailyUpdateService {
@@ -47,6 +49,8 @@ public class DailyUpdateService {
             default:
                 XMLExtractor extractor = XMLExtractor.getInstance(result);
                 List<Policy> policies = extractor.extractPolicy();
+                ArrayList<String> textToInsert = new ArrayList<>();
+                MilvusAPI milvusAPI = new MilvusAPI();
 
                 // 插入每个 Policy 对象
                 for (Policy policy : policies) {
@@ -66,6 +70,9 @@ public class DailyUpdateService {
                             policy.setChineseSummary(llmFileIO.Read());
                         }
 
+                        // 准备插入到Milvus
+                        textToInsert.add(policy.getChineseSummary());
+
                         policyMapper.insertDocument(
                                 policy.getType(),
                                 policy.getDate(),
@@ -82,12 +89,15 @@ public class DailyUpdateService {
                                 policy.getChineseSummary(),
                                 policy.getContent()
                         );
-                        System.out.println("数据库更新成功");
+                        System.out.println("MySQL数据库更新成功");
                     }catch (Exception e){
                         e.printStackTrace();
                         System.out.println(policy.getDate());
                     }
                 }
+                // 插入到Milvus
+                milvusAPI.insertTexts(textToInsert);
+                
                 break;
         }
     }
