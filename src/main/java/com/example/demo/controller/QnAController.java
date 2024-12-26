@@ -25,6 +25,7 @@ public class QnAController {
         // 调用业务逻辑层方法
         Message responseMsg = new Message();
         responseMsg.setContent(qnAService.processPolicyQuestion(question.getContent()));
+        System.out.println(String.format("content内容: %s", responseMsg.getContent()));
         return ResponseEntity.ok(responseMsg);
     }
 }

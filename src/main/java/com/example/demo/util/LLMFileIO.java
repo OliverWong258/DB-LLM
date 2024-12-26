@@ -7,6 +7,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 public class LLMFileIO {
@@ -31,14 +34,8 @@ public class LLMFileIO {
     }
 
     public String Read(){
-        try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(new FileInputStream(responsePath), encoding))) {
-            String line;
-            String result = "";
-            while ((line = br.readLine()) != null) {
-                //System.out.println("当前行："+line);
-                result += line;
-            }
+        try {
+            String result = Files.readString(Paths.get(responsePath), StandardCharsets.UTF_8);
             System.out.println("文件已成功读取");
             return result;
         } catch (IOException e) {

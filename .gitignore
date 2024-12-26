@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### TXT Files ###
+TXTFiles/
+
+### Word Files ###
+WordFiles/
+
+### XML Files ###
+XMLFiles/
