@@ -2,6 +2,8 @@ package com.example.demo.util;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.nio.charset.StandardCharsets;
 
 public class MilvusAPI {
@@ -18,7 +20,7 @@ public class MilvusAPI {
      * @param pythonScriptPath Python 脚本的绝对路径
      * @throws IOException 如果启动进程失败
      */
-    public void startPythonScript(String pythonScriptPath) throws IOException {
+    public void startPythonScript(String pythonScriptPath, Boolean recordOutput) throws IOException {
         ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath);
         processBuilder.redirectErrorStream(true); // 合并标准输出和错误输出
         pythonProcess = processBuilder.start();
@@ -27,21 +29,41 @@ public class MilvusAPI {
         pythonWriter = new BufferedWriter(new OutputStreamWriter(pythonProcess.getOutputStream(), StandardCharsets.UTF_8));
         pythonReader = new BufferedReader(new InputStreamReader(pythonProcess.getInputStream(), StandardCharsets.UTF_8));
         pythonErrorReader = new BufferedReader(new InputStreamReader(pythonProcess.getErrorStream(), StandardCharsets.UTF_8));
+        Map<Integer, String> outputMap = new HashMap<>();
 
-        // 启动一个线程来读取 Python 脚本的输出（可选）
-        new Thread(() -> {
-            String line;
-            try {
-                while ((line = pythonReader.readLine()) != null) {
-                    result += line;
-                    System.out.println("[Python]: " + line);
+        // 启动一个线程来读取 Python 脚本的输出
+        if (recordOutput){
+            new Thread(() -> {
+                String line;
+                try {
+                    while ((line = pythonReader.readLine()) != null) {
+                        String[] parts = line.split("\n", 2); // 按照换行符分割
+
+                        if (parts.length == 2) {
+                            // 解析 id（整型）和文本（字符串）
+                            try {
+                                int id = Integer.parseInt(parts[0].trim());  // 转换为整型
+                                String text = parts[1].trim();  // 处理文本部分
+
+                                // 存储到 Map 中
+                                outputMap.put(id, text);
+
+                                // 输出当前的 id 和文本
+                                System.out.println(id);
+                                System.out.println(text);
+                            } catch (NumberFormatException e) {
+                                // 如果 id 不是一个合法的整型，跳过这一行
+                                System.out.println("无效的 id: " + parts[0]);
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).start();
+            }).start();
+        }
 
-        // 启动一个线程来读取 Python 脚本的错误输出（可选）
+        // 启动一个线程来读取 Python 脚本的错误输出
         new Thread(() -> {
             String line;
             try {
@@ -96,16 +118,17 @@ public class MilvusAPI {
     }
 
     // 批量插入
-    public void insertTexts(ArrayList<String> textsToInsert) {
+    public void insertTexts(ArrayList<Map.Entry<Integer, String>> textsToInsert) {
         String pythonScriptPath = "src\\main\\resources\\python\\milvus_insert.py";
         try{
             // 启动 Python 脚本
-            this.startPythonScript(pythonScriptPath);
+            this.startPythonScript(pythonScriptPath, false);
 
             // 逐个插入文本
-            for (String text : textsToInsert) {
-                this.writeCommand(text);
-                // 可以根据需要添加延时，例如 Thread.sleep(1000);
+            for (Map.Entry<Integer, String> text : textsToInsert) {
+                this.writeCommand(text.getKey().toString());
+                this.writeCommand(text.getValue());
+                // Thread.sleep(1000);
             }
 
             // 发送终止信号
@@ -124,7 +147,7 @@ public class MilvusAPI {
     public String searchTexts(String question){
         String pythonScriptPath = "src\\main\\resources\\python\\milvus_search.py";
         try{
-            this.startPythonScript(pythonScriptPath);
+            this.startPythonScript(pythonScriptPath, true);
 
             this.writeCommand(pythonScriptPath);
 

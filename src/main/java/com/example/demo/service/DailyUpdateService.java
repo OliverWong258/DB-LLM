@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.AbstractMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,7 +51,7 @@ public class DailyUpdateService {
             default:
                 XMLExtractor extractor = XMLExtractor.getInstance(result);
                 List<Policy> policies = extractor.extractPolicy();
-                ArrayList<String> textToInsert = new ArrayList<>();
+                ArrayList<Map.Entry<Integer, String>> textsToInsert = new ArrayList<>();
                 MilvusAPI milvusAPI = new MilvusAPI();
 
                 // 插入每个 Policy 对象
@@ -70,9 +72,6 @@ public class DailyUpdateService {
                             policy.setChineseSummary(llmFileIO.Read());
                         }
 
-                        // 准备插入到Milvus
-                        textToInsert.add(policy.getChineseSummary());
-
                         policyMapper.insertDocument(
                                 policy.getType(),
                                 policy.getDate(),
@@ -89,6 +88,10 @@ public class DailyUpdateService {
                                 policy.getChineseSummary(),
                                 policy.getContent()
                         );
+                        
+                        // 准备插入到Milvus
+                        textsToInsert.add(new AbstractMap.SimpleEntry<>(policy.getId(), policy.getChineseSummary()));
+
                         System.out.println("MySQL数据库更新成功");
                     }catch (Exception e){
                         e.printStackTrace();
@@ -96,7 +99,7 @@ public class DailyUpdateService {
                     }
                 }
                 // 插入到Milvus
-                milvusAPI.insertTexts(textToInsert);
+                milvusAPI.insertTexts(textsToInsert);
                 
                 break;
         }

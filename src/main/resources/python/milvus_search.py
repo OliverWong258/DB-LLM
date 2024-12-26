@@ -79,12 +79,13 @@ def main():
         param=search_params,
         limit=5,                         # 返回的结果数量
         expr=None,                       # 可选的过滤条件
-        output_fields=["text"]           # 要返回的字段
+        output_fields=["id", "text"]           # 要返回的字段
     )
 
     # 输出搜索结果
     for hits in results:
         for hit in hits:
+            print(hit.entity.get('id'))
             print(hit.entity.get('text'))
 
 if __name__ == "__main__":

@@ -5,8 +5,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.AbstractMap;
+import java.util.Map;
 
-//import com.example.demo.util.MilvusAPI;
 import com.example.demo.util.MilvusAPI;
 import com.example.demo.mapper.PolicyMapper;
 import com.example.demo.entity.Policy;
@@ -18,23 +19,10 @@ public class MilvusTest {
     PolicyMapper policyMapper;
 
     @Test
-    public void testMilvusInsert(){
-        //MilvusAPI milvusInsert = new MilvusAPI("policies");
-        MilvusAPI milvusInserter = new MilvusAPI();
-
-        ArrayList<String> textsToInsert = new ArrayList<>();
-        textsToInsert.add("这是第一条测试文本。");
-        textsToInsert.add("这是第二条测试文本。");
-        textsToInsert.add("这是第三条测试文本。");
-
-        milvusInserter.insertTexts(textsToInsert);
-    }
-
-    @Test
     public void testMilvusSearch(){
         MilvusAPI milvusInserter = new MilvusAPI();
 
-        String question = "美国制裁中国科技公司";
+        String question = "";
 
         String result = milvusInserter.searchTexts(question);
         System.out.println("查询结果:");
@@ -48,10 +36,10 @@ public class MilvusTest {
 
         MilvusAPI milvusAPI = new MilvusAPI();
 
-        ArrayList<String> policiesToInsert = new ArrayList<>();
+        ArrayList<Map.Entry<Integer, String>> policiesToInsert = new ArrayList<>();
         for (Policy policy:policies){
             if (policy.getChineseSummary().length() > 2){
-                policiesToInsert.add(policy.getChineseSummary());
+                policiesToInsert.add(new AbstractMap.SimpleEntry<>(policy.getId(), policy.getChineseSummary()));
             }
         }
 

@@ -8,6 +8,7 @@ import java.sql.Date;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Options;
 
 
 @Mapper
@@ -18,6 +19,7 @@ public interface PolicyMapper {
      */
     @Insert("INSERT INTO Policies (type, date, day_of_the_week, agency, subagency, subject, chineseSubject, cfr, depdoc, frdoc, bilcod, summary, chinese_summary, content) " +
             "VALUES (#{type}, #{date}, #{dayOfWeek}, #{agency}, #{subagency}, #{subjectJson}, #{chineseSubjectJson}, #{cfr}, #{depdoc}, #{frdoc}, #{bilcod}, #{summary}, #{chineseSummary}, #{content})")
+    @Options(useGeneratedKeys = true, keyProperty = "id")
     void insertDocument(
             @Param("type") String type,
             @Param("date") Date date,

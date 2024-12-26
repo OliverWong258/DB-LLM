@@ -22,7 +22,7 @@ def initialize_milvus():
     has_collection = utility.has_collection(collection_name)
     if not has_collection:
         fields = [
-            FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True),
+            FieldSchema(name="id", dtype=DataType.INT64, is_primary=True),
             FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=768),
             FieldSchema(name="text", dtype=DataType.VARCHAR, max_length=65535)  # VARCHAR 类型用于存储文本
         ]
@@ -77,34 +77,27 @@ def generate_embedding(tokenizer, model, text):
 def main():
     tokenizer, model, collection = initialize_milvus()
 
-    print("请输入要插入的文本（输入 '-1' 以退出）：")
-
     while True:
         try:
-            # 从标准输入读取一行
-            text = sys.stdin.readline()
-            if not text:
-                break  # EOF
-            text = text.strip()
-            if text == "-1":
-                print("收到终止信号，正在退出...")
+            input_id = int(input().strip())
+            if input_id == -1:
+                print("收到终止信号，正在退出")
                 break
-            if not text:
-                print("输入的文本为空，请重新输入。")
-                continue
+            text = input().strip()
 
             # 生成嵌入
             embedding = generate_embedding(tokenizer, model, text)
 
             # 准备插入的数据
             entities = [
+                [int(input_id)],
                 [embedding],  # 仅插入 embedding 字段，id 自动生成
                 [text]        # 插入文本，便于查询时返回
             ]
 
             # 插入数据
             insert_result = collection.insert(entities)
-            print(f"文本 '{text}' 已插入 Milvus，自动生成的 ID: {insert_result.primary_keys}")
+            print(f"文本 '{text}' 已插入 Milvus")
 
         except Exception as e:
             print(f"发生错误: {e}")
