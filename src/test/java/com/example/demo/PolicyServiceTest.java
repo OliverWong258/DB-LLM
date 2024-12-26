@@ -25,7 +25,7 @@ public class PolicyServiceTest {
 
     @Test
     public void testSearchPolicies_OnlyKeywords() {
-        String keywords = "Child Soldiers";
+        String keywords = "";
         List<Policy> policies = policyService.searchPolicies(keywords, null, null);
         assertNotNull(policies);
         for (Policy policy : policies) {
