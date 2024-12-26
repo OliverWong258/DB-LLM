@@ -15,6 +15,7 @@ public class ReportService {
      */
     public String generateReport(String reportContent) {
         // 实现Word文档生成逻辑
+        System.out.println(String.format("收到保存内容: %s", reportContent));
         return WordGenerator.generateWord(reportContent);
     }
 }

@@ -34,7 +34,7 @@ public class MilvusTest {
     public void testMilvusSearch(){
         MilvusAPI milvusInserter = new MilvusAPI();
 
-        String question = "今天工业安全局发布了哪些文件？";
+        String question = "美国制裁中国科技公司";
 
         String result = milvusInserter.searchTexts(question);
         System.out.println("查询结果:");
@@ -50,7 +50,9 @@ public class MilvusTest {
 
         ArrayList<String> policiesToInsert = new ArrayList<>();
         for (Policy policy:policies){
-            policiesToInsert.add(policy.getChineseSummary());
+            if (policy.getChineseSummary().length() > 2){
+                policiesToInsert.add(policy.getChineseSummary());
+            }
         }
 
         milvusAPI.insertTexts(policiesToInsert);

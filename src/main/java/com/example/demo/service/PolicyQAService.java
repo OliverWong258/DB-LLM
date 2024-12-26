@@ -16,6 +16,8 @@ public class PolicyQAService {
      * @return 回答结果
      */
     public String processPolicyQuestion(String question) {
+        System.out.println(String.format("收到问题: %s", question));
+        
         // 解析问题，检索信息，调用大模型生成回答
         MilvusAPI milvusAPI = new MilvusAPI();
 
@@ -33,7 +35,10 @@ public class PolicyQAService {
         questFileIO.Write(requestStr);
         AskUsingApi.ask("no", questFileIO.requestPath, "", questFileIO.responsePath);
         
-        return questFileIO.Read();
+        String result = questFileIO.Read();
+        System.out.println("结果: ");
+        System.out.println(result);
+        return result;
     }
 }
 

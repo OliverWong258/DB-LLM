@@ -77,7 +77,7 @@ def main():
         data=[query_embedding],          # 查询向量
         anns_field="embedding",          # 搜索的字段
         param=search_params,
-        limit=3,                         # 返回的结果数量
+        limit=5,                         # 返回的结果数量
         expr=None,                       # 可选的过滤条件
         output_fields=["text"]           # 要返回的字段
     )
