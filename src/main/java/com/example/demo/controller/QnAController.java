@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import com.example.demo.entity.Message;
+import com.example.demo.entity.QAResult;
 import com.example.demo.service.PolicyQAService;
 
 @RestController
@@ -21,12 +22,14 @@ public class QnAController {
      * @return 回答结果
      */
     @PostMapping("/policy")
-    public ResponseEntity<Message> askPolicyQuestion(@RequestBody Message question) {
+    public ResponseEntity<QAResult> askPolicyQuestion(@RequestBody Message question) {
         // 调用业务逻辑层方法
-        Message responseMsg = new Message();
-        responseMsg.setContent(qnAService.processPolicyQuestion(question.getContent()));
-        System.out.println(String.format("content内容: %s", responseMsg.getContent()));
-        return ResponseEntity.ok(responseMsg);
+        //Message responseMsg = new Message();
+        QAResult responseREsult = qnAService.processPolicyQuestion(question.getContent());
+        System.out.println(String.format("回答: %s", responseREsult.getResult()));
+        System.out.println("参考资料：");
+        System.out.println(responseREsult.getRefMap());
+        return ResponseEntity.ok(responseREsult);
     }
 }
 

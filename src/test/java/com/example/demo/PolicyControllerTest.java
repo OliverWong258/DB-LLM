@@ -8,7 +8,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -17,10 +17,11 @@ public class PolicyControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void testSearchPolicies_API() throws Exception {
+    public void testSearchPolicies() throws Exception {
         mockMvc.perform(get("/api/policies/search")
-                .param("keywords", ""))
-                .andDo(print())
+                .param("departmentNo", "1")
+                .param("publishDate", "2024-01-02"))
+                //.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
     }

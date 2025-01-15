@@ -45,37 +45,23 @@ public class PolicyMapperTest {
                     // 插入每个 Policy 对象
                     for (Policy policy : policies) {
                         try{
-                            // 翻译关键词
-                            if (policy.getSubjectJson().toString() != null && !policy.getSubjectJson().toString().trim().isEmpty()){
-                                LLMFileIO llmFileIO = new LLMFileIO();
-                                llmFileIO.Write(policy.getSubjectJson().toString());
-                                TranslateUsingApi.translate(llmFileIO.requestPath, llmFileIO.responsePath);
-                                policy.setChineseSubject(llmFileIO.Read());
-                            }
-                            // 翻译摘要
-                            if (policy.getSummary() != ""){
-                                LLMFileIO llmFileIO = new LLMFileIO();
-                                llmFileIO.Write(policy.getSummary());
-                                TranslateUsingApi.translate(llmFileIO.requestPath, llmFileIO.responsePath);
-                                policy.setChineseSummary(llmFileIO.Read());
-                            }
+                            // 若关键词或摘要缺失则略过
+                            if(policy.getSubjectJson() == null || policy.getSubjectJson().toString() == ""
+                            || policy.getSummary() == "") continue;
 
-                            policyMapper.insertDocument(
-                                    policy.getType(),
-                                    policy.getDate(),
-                                    policy.getDayOfTheWeek(),
-                                    policy.getAgency(),
-                                    policy.getSubagency(),
-                                    policy.getSubjectJson().toString(),
-                                    policy.getChineseSubject(),
-                                    policy.getCfr(),
-                                    policy.getDepdoc(),
-                                    policy.getFrdoc(),
-                                    policy.getBilcod(),
-                                    policy.getSummary(),
-                                    policy.getChineseSummary(),
-                                    policy.getContent()
-                            );
+                            // 翻译关键词
+                            LLMFileIO subjectFileIO = new LLMFileIO();
+                            subjectFileIO.Write(policy.getSubjectJson().toString());
+                            TranslateUsingApi.translate(subjectFileIO.requestPath, subjectFileIO.responsePath);
+                            policy.setChineseSubject(subjectFileIO.Read());
+
+                            // 翻译摘要
+                            LLMFileIO summaryFileIO = new LLMFileIO();
+                            summaryFileIO.Write(policy.getSummary());
+                            TranslateUsingApi.translate(summaryFileIO.requestPath, summaryFileIO.responsePath);
+                            policy.setChineseSummary(summaryFileIO.Read());
+
+                            policyMapper.insertDocument(policy);
                             System.out.println("数据库更新成功");
                         }catch (Exception e){
                             e.printStackTrace();

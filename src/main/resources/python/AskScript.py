@@ -1,5 +1,6 @@
 from sparkai.llm.llm import ChatSparkLLM, BaseCallbackHandler,Optional,Any
 from sparkai.core.messages import ChatMessage
+import time
 
 #星火认知大模型Spark Max的URL值，其他版本大模型URL值请前往文档（https://www.xfyun.cn/doc/spark/Web.html）查看
 SPARKAI_URL = 'wss://spark-api.xf-yun.com/v1.1/chat'
@@ -9,10 +10,10 @@ SPARKAI_API_SECRET = 'NGMzNTQ2MTEwNzZlNTFiNzFkNDZiNmM1'
 SPARKAI_API_KEY = '539d259c8284d57ee874177a2cbd9de1'
 #星火认知大模型Spark Max的domain值，其他版本大模型domain值请前往文档（https://www.xfyun.cn/doc/spark/Web.html）查看
 SPARKAI_DOMAIN = 'lite'
-has_reference=input()
-questionPath=input()
-referencePath=input()
-outputPath=input()
+has_reference="no"#input()
+questionPath="D:\Codes\Java\SpringBoot\demo\TXTFiles\\request\question.txt"#input()
+referencePath=""#input()
+outputPath="D:\Codes\Java\SpringBoot\demo\TXTFiles\\response\\answer.txt"#input()
 class ChunkPrintHandler(BaseCallbackHandler):
     """Callback Handler that prints to std out."""
 
@@ -33,6 +34,7 @@ class ChunkPrintHandler(BaseCallbackHandler):
 
 
 if __name__ == '__main__':
+    #tm = time.time()
     spark = ChatSparkLLM(
         spark_api_url=SPARKAI_URL,
         spark_app_id=SPARKAI_APP_ID,
@@ -52,7 +54,9 @@ if __name__ == '__main__':
                     ChatMessage(role='ai',content='好的，我已经收到你的问题，请提供你的参考文本'),
                     ChatMessage(role='user',content=reference)]
                 handler = ChunkPrintHandler()
+                tm = time.time()
                 a = spark.generate([messages], callbacks=[handler])
+                print(tm-time.time())
         else:
             messages=[]
             questions=question.split('@$@')
@@ -63,4 +67,7 @@ if __name__ == '__main__':
                     else:
                         messages.append(ChatMessage(role='ai',content=questions[i]))
             handler = ChunkPrintHandler()
+            tm = time.time()
             a = spark.generate([messages], callbacks=[handler])
+            print(time.time()-tm)
+    #print(time.time()-tm)

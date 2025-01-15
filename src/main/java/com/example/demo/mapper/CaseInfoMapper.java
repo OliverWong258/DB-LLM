@@ -1,8 +1,12 @@
 package com.example.demo.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import com.example.demo.entity.CaseInfo;
 
 @Mapper
 public interface CaseInfoMapper {
@@ -18,4 +22,12 @@ public interface CaseInfoMapper {
             @Param("chineseSummary") String chineseSummary,
             @Param("content") String content
     );
+
+    /**
+     * 根据可选条件查询案件列表
+     * @param id 案件ID
+     * @return 案件列表
+     */
+    List<CaseInfo> searchCases(
+            @Param("caseID") int id);
 }

@@ -3,6 +3,7 @@ import torch
 from pymilvus import connections, Collection, utility
 import sys
 import io
+import time
 
 # 设置标准输出和输入为 UTF-8 编码
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
@@ -10,9 +11,12 @@ sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 
 def initialize_milvus():
     # 初始化 tokenizer 和模型
+    tm = time.time()
     tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
     model = BertModel.from_pretrained('bert-base-chinese')
+    print("bert ", time.time()-tm)
 
+    tm = time.time()
     # 连接到 Milvus 服务器
     connections.connect("default", host="localhost", port="19530")
     #print("已连接到 Milvus 服务器。")
@@ -34,6 +38,7 @@ def initialize_milvus():
         print(f"加载集合失败: {e}", file=sys.stderr)
         sys.exit(1)
 
+    print("connect to milvus ", time.time()-tm)
     return tokenizer, model, collection
 
 def generate_embedding(tokenizer, model, text):
@@ -56,8 +61,9 @@ def generate_embedding(tokenizer, model, text):
     return sentence_embedding_np.tolist()
 
 def main():
+    #tm = time.time()
     tokenizer, model, collection = initialize_milvus()
-
+    #print(time.time()-tm)
     query_text = input().strip() # input("请输入查询文本:\n").strip()
     if not query_text:
         print("输入的查询文本为空，程序退出。", file=sys.stderr)

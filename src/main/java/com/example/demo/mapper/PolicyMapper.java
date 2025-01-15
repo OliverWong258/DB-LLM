@@ -18,24 +18,9 @@ public interface PolicyMapper {
      * 添加数据
      */
     @Insert("INSERT INTO Policies (type, date, day_of_the_week, agency, subagency, subject, chineseSubject, cfr, depdoc, frdoc, bilcod, summary, chinese_summary, content) " +
-            "VALUES (#{type}, #{date}, #{dayOfWeek}, #{agency}, #{subagency}, #{subjectJson}, #{chineseSubjectJson}, #{cfr}, #{depdoc}, #{frdoc}, #{bilcod}, #{summary}, #{chineseSummary}, #{content})")
+            "VALUES (#{type}, #{date}, #{dayOfTheWeek}, #{agency}, #{subagency}, #{subjectJson}, #{chineseSubject}, #{cfr}, #{depdoc}, #{frdoc}, #{bilcod}, #{summary}, #{chineseSummary}, #{content})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    void insertDocument(
-            @Param("type") String type,
-            @Param("date") Date date,
-            @Param("dayOfWeek") String dayOfWeek,
-            @Param("agency") String agency,
-            @Param("subagency") String subagency,
-            @Param("subjectJson") String subjectJson,
-            @Param("chineseSubjectJson") String chineseSubject,
-            @Param("cfr") String cfr,
-            @Param("depdoc") String depdoc,
-            @Param("frdoc") String frdoc,
-            @Param("bilcod") String bilcod,
-            @Param("summary") String summary,
-            @Param("chineseSummary") String chineseSummary,
-            @Param("content") String content
-    );
+    void insertDocument(Policy policy);
 
     /**
      * 根据可选条件查询政策列表

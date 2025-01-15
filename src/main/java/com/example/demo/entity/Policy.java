@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
-import org.json.JSONArray;
+//import org.json.JSONArray;
 
 @Data
 @NoArgsConstructor
@@ -17,7 +17,7 @@ public class Policy {
     private String dayOfTheWeek;      // 星期几
     private String agency;            // 机构
     private String subagency;         // 子机构
-    private JSONArray subjectJson;           // 主题（JSON 格式）
+    private String subjectJson;           // 主题（JSON 格式）
     private String chineseSubject;    // 中文主题（JSON 格式）
     private String cfr;               // CFR
     private String depdoc;            // DEP DOC

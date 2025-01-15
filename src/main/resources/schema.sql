@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS Policies (
         agency VARCHAR(255),
         subagency VARCHAR(255),
         subject JSON,
-        chineseSubject VARCHAR(255),
+        chineseSubject TEXT,
         cfr VARCHAR(255),
         depdoc VARCHAR(1023),
         frdoc VARCHAR(255),

@@ -3,6 +3,7 @@ import torch
 from pymilvus import connections, FieldSchema, CollectionSchema, DataType, Collection, utility
 import sys
 import io
+import time
 
 # 强制设置标准输入输出为 UTF-8
 sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
@@ -75,8 +76,9 @@ def generate_embedding(tokenizer, model, text):
     return sentence_embedding_np.tolist()
 
 def main():
+    tm = time.time()
     tokenizer, model, collection = initialize_milvus()
-
+    print(time.time()-tm)
     while True:
         try:
             input_id = int(input().strip())
@@ -84,6 +86,7 @@ def main():
                 print("收到终止信号，正在退出")
                 break
             text = input().strip()
+            tm = time.time()
 
             # 生成嵌入
             embedding = generate_embedding(tokenizer, model, text)
@@ -97,6 +100,7 @@ def main():
 
             # 插入数据
             insert_result = collection.insert(entities)
+            print(time.time()-tm)
             print(f"文本 '{text}' 已插入 Milvus")
 
         except Exception as e:

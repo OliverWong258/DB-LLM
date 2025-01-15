@@ -29,3 +29,10 @@ app:
   xml:
     storage:
       path: "XMLFiles/"
+
+milvus:
+  python:
+    insert:
+      url: http://localhost:8000/milvus/insert
+    search:
+      url: http://localhost:8000/milvus/search

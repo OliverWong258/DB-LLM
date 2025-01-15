@@ -22,20 +22,25 @@ public class PolicyController {
     /**
      * 根据查询条件获取政策列表
      * @param keywords 关键词
-     * @param department 颁布部门
+     * @param departmentNo 颁布部门编号，0="bureau of industry and security", 1="department of the treasury"
+     * 2="department of state", 3-"department of justice"
      * @param publishDate 发布日期
      * @return 政策列表
      */
     @GetMapping("/search")
     public ResponseEntity<List<Policy>> searchPolicies(
             @RequestParam(required = false) String keywords,
-            @RequestParam(required = false) String department,
+            @RequestParam(required = false) Integer departmentNo,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate publishDate) {
-                System.out.println(String.format("keywords: %s, department: %s", 
-                keywords, department));
+
+        System.out.println("收到政策查询请求");
+        System.out.print(String.format("keywords: %s, department: %s, ", 
+        keywords, departmentNo));
+        System.out.print("publishDate");
+        System.out.println(publishDate);
         
         // 调用业务逻辑层方法
-        return ResponseEntity.ok(policyService.searchPolicies(keywords, department, publishDate));
+        return ResponseEntity.ok(policyService.searchPolicies(keywords, departmentNo, publishDate));
     }
 
 }

@@ -5,44 +5,42 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.AbstractMap;
-import java.util.Map;
 
-import com.example.demo.util.MilvusAPI;
 import com.example.demo.mapper.PolicyMapper;
-import com.example.demo.entity.Policy;
+import com.example.demo.entity.*;
+import com.example.demo.util.MilvusClientService;
 
 @SpringBootTest
 public class MilvusTest {
 
     @Autowired
-    PolicyMapper policyMapper;
+    private PolicyMapper policyMapper;
+
+    @Autowired
+    private MilvusClientService milvusClientService;
 
     @Test
     public void testMilvusSearch(){
-        MilvusAPI milvusInserter = new MilvusAPI();
 
-        String question = "";
+        String question = "药品制造和生产";
 
-        String result = milvusInserter.searchTexts(question);
+        List<SearchResult> searchResults = milvusClientService.searchTexts("policies", question, 5);
         System.out.println("查询结果:");
-        System.out.println(result);
+        System.out.println(searchResults);
         System.out.println();
     }
 
     @Test
-    public void testMilvusInsertAll(){
+    public void testMilvusInsertAllPolicies(){
+        //String dateString = "2025-01-02";
+
         List<Policy> policies = policyMapper.searchPolicies(null, null, null);
 
-        MilvusAPI milvusAPI = new MilvusAPI();
-
-        ArrayList<Map.Entry<Integer, String>> policiesToInsert = new ArrayList<>();
+        List<TextToInsert> textList = new ArrayList<>();
         for (Policy policy:policies){
-            if (policy.getChineseSummary().length() > 2){
-                policiesToInsert.add(new AbstractMap.SimpleEntry<>(policy.getId(), policy.getChineseSummary()));
-            }
+            textList.add(new TextToInsert(policy.getId(), policy.getChineseSummary()));
         }
 
-        milvusAPI.insertTexts(policiesToInsert);
+        milvusClientService.insertTexts("policies", textList);
     }
 }

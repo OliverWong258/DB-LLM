@@ -5,26 +5,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.AbstractMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.example.demo.entity.Policy;
+import com.example.demo.entity.TextToInsert;
 import com.example.demo.util.WebCrawler;
 import com.example.demo.util.XMLExtractor;
 import com.example.demo.mapper.PolicyMapper;
 import com.example.demo.util.TranslateUsingApi;
 import com.example.demo.util.LLMFileIO;
 import com.example.demo.util.DeleteFilesInDirectory;
-import com.example.demo.util.MilvusAPI;
+import com.example.demo.util.MilvusClientService;
 
 @Service
 public class DailyUpdateService {
 
     @Autowired
     private PolicyMapper policyMapper;
+
+    @Autowired
+    private MilvusClientService milvusClientService;
 
     @Value("${app.xml.storage.path}")
     private String xmlStoragePath;
@@ -33,7 +35,7 @@ public class DailyUpdateService {
     private String responsePath = "TXTFiles/response/";
 
     // 秒 分 时 日 月 周
-    @Scheduled(cron = "0 30 12 * * ?")
+    @Scheduled(cron = "0 5 19 * * ?")
     public void updateData() {
         // 调用爬虫脚本
         System.out.println("开始爬取最新的xml文件");
@@ -51,56 +53,40 @@ public class DailyUpdateService {
             default:
                 XMLExtractor extractor = XMLExtractor.getInstance(result);
                 List<Policy> policies = extractor.extractPolicy();
-                ArrayList<Map.Entry<Integer, String>> textsToInsert = new ArrayList<>();
-                MilvusAPI milvusAPI = new MilvusAPI();
+                List<TextToInsert> textList = new ArrayList<>();
 
                 // 插入每个 Policy 对象
                 for (Policy policy : policies) {
                     try{
-                        // 翻译关键词
-                        if (policy.getSubjectJson().toString() != null && !policy.getSubjectJson().toString().trim().isEmpty()){
-                            LLMFileIO llmFileIO = new LLMFileIO();
-                            llmFileIO.Write(policy.getSubjectJson().toString());
-                            TranslateUsingApi.translate(llmFileIO.requestPath, llmFileIO.responsePath);
-                            policy.setChineseSubject(llmFileIO.Read());
-                        }
-                        // 翻译摘要
-                        if (policy.getSummary() != ""){
-                            LLMFileIO llmFileIO = new LLMFileIO();
-                            llmFileIO.Write(policy.getSummary());
-                            TranslateUsingApi.translate(llmFileIO.requestPath, llmFileIO.responsePath);
-                            policy.setChineseSummary(llmFileIO.Read());
-                        }
+                        // 若关键词或摘要缺失则略过
+                        if(policy.getSubjectJson() == null || policy.getSubjectJson().toString() == ""
+                        || policy.getSummary() == "") continue;
 
-                        policyMapper.insertDocument(
-                                policy.getType(),
-                                policy.getDate(),
-                                policy.getDayOfTheWeek(),
-                                policy.getAgency(),
-                                policy.getSubagency(),
-                                policy.getSubjectJson().toString(),
-                                policy.getChineseSubject(),
-                                policy.getCfr(),
-                                policy.getDepdoc(),
-                                policy.getFrdoc(),
-                                policy.getBilcod(),
-                                policy.getSummary(),
-                                policy.getChineseSummary(),
-                                policy.getContent()
-                        );
-                        
-                        // 准备插入到Milvus
-                        textsToInsert.add(new AbstractMap.SimpleEntry<>(policy.getId(), policy.getChineseSummary()));
+                        // 翻译关键词
+                        LLMFileIO subjectFileIO = new LLMFileIO();
+                        subjectFileIO.Write(policy.getSubjectJson().toString());
+                        TranslateUsingApi.translate(subjectFileIO.requestPath, subjectFileIO.responsePath);
+                        policy.setChineseSubject(subjectFileIO.Read());
+
+                        // 翻译摘要
+                        LLMFileIO summaryFileIO = new LLMFileIO();
+                        summaryFileIO.Write(policy.getSummary());
+                        TranslateUsingApi.translate(summaryFileIO.requestPath, summaryFileIO.responsePath);
+                        policy.setChineseSummary(summaryFileIO.Read());
+
+                        policyMapper.insertDocument(policy);
 
                         System.out.println("MySQL数据库更新成功");
+
+                        // 准备插入到Milvus
+                        textList.add(new TextToInsert(policy.getId(), policy.getChineseSummary()));
                     }catch (Exception e){
                         e.printStackTrace();
                         System.out.println(policy.getDate());
                     }
                 }
                 // 插入到Milvus
-                milvusAPI.insertTexts(textsToInsert);
-                
+                milvusClientService.insertTexts("policies", textList);
                 break;
         }
     }

@@ -148,12 +148,12 @@ public class XMLExtractor {
 
                     agency = (agency != null) ? agency : "0";
                     subagency = (subagency != null) ? subagency : "0";
-                    JSONArray subjectStr = (subjectJson.length() > 0) ? subjectJson : new JSONArray();
+                    String subjectStr = (subjectJson.length() > 0) ? subjectJson.toString() : "";
                     cfr = (cfr != null) ? cfr : "0";
                     depdoc = (depdoc != null) ? depdoc : "0";
                     frdoc = (frdoc != null) ? frdoc : "0";
                     bilcod = (bilcod != null) ? bilcod : "0";
-                    summary = (summary.length() > 0) ? summary : "0";
+                    summary = (summary.length() > 0) ? summary : "";
                     String contentStr = nodeToString(element);
                     LocalDate localDate = LocalDate.parse(date);
                     java.sql.Date sqlDate = java.sql.Date.valueOf(localDate);
