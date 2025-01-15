@@ -22,7 +22,7 @@ public class MilvusTest {
     @Test
     public void testMilvusSearch(){
 
-        String question = "药品制造和生产";
+        String question = "大型跨国公司";
 
         List<SearchResult> searchResults = milvusClientService.searchTexts("policies", question, 5);
         System.out.println("查询结果:");

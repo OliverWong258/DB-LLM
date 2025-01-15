@@ -14,8 +14,8 @@ public class PolicyQATest {
     
     @Test
     public void testAsking(){
-        String question = "最近有哪些和进出口管制有关的新闻";
+        String question = "最近有哪些与大型跨国公司相关的政策";
 
-        System.out.println(policyQAService.processPolicyQuestion(question));
+        policyQAService.processPolicyQuestion(question);
     }
 }

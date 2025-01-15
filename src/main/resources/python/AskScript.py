@@ -1,6 +1,6 @@
 from sparkai.llm.llm import ChatSparkLLM, BaseCallbackHandler,Optional,Any
 from sparkai.core.messages import ChatMessage
-import time
+#import time
 
 #星火认知大模型Spark Max的URL值，其他版本大模型URL值请前往文档（https://www.xfyun.cn/doc/spark/Web.html）查看
 SPARKAI_URL = 'wss://spark-api.xf-yun.com/v1.1/chat'
@@ -10,10 +10,10 @@ SPARKAI_API_SECRET = 'NGMzNTQ2MTEwNzZlNTFiNzFkNDZiNmM1'
 SPARKAI_API_KEY = '539d259c8284d57ee874177a2cbd9de1'
 #星火认知大模型Spark Max的domain值，其他版本大模型domain值请前往文档（https://www.xfyun.cn/doc/spark/Web.html）查看
 SPARKAI_DOMAIN = 'lite'
-has_reference="no"#input()
-questionPath="D:\Codes\Java\SpringBoot\demo\TXTFiles\\request\question.txt"#input()
-referencePath=""#input()
-outputPath="D:\Codes\Java\SpringBoot\demo\TXTFiles\\response\\answer.txt"#input()
+has_reference=input()#"yes"
+questionPath=input()#"D:\Codes\Java\SpringBoot\demo\TXTFiles\\request\question.txt"
+referencePath=input()#"D:\Codes\Java\SpringBoot\demo\TXTFiles\\request\\reference.txt"
+outputPath=input()#"D:\Codes\Java\SpringBoot\demo\TXTFiles\\response\\answer.txt"
 class ChunkPrintHandler(BaseCallbackHandler):
     """Callback Handler that prints to std out."""
 
@@ -48,15 +48,15 @@ if __name__ == '__main__':
         if has_reference=='yes':
             with open(referencePath,"r",encoding="utf-8") as file2:
                 reference=file2.read()
-                messages = [ChatMessage(role="user",content='我接下来会问一个问题，然后提供一些参考文本，请结合我提供的参考文本回答我的问题。'),
+                messages = [ChatMessage(role="user",content='我接下来会问一个问题，然后提供一些参考文本，如果参考文本与问题直接相关的话，请结合我提供的参考文本回答我的问题；如果参考文本与问题无关，就无视参考文本直接回答问题。'),
                     ChatMessage(role='ai',content="好的，请提供你的问题"),
                     ChatMessage(role='user',content=question),
                     ChatMessage(role='ai',content='好的，我已经收到你的问题，请提供你的参考文本'),
                     ChatMessage(role='user',content=reference)]
                 handler = ChunkPrintHandler()
-                tm = time.time()
+                #tm = time.time()
                 a = spark.generate([messages], callbacks=[handler])
-                print(tm-time.time())
+                #print(time.time()-tm)
         else:
             messages=[]
             questions=question.split('@$@')
@@ -67,7 +67,7 @@ if __name__ == '__main__':
                     else:
                         messages.append(ChatMessage(role='ai',content=questions[i]))
             handler = ChunkPrintHandler()
-            tm = time.time()
+            #tm = time.time()
             a = spark.generate([messages], callbacks=[handler])
-            print(time.time()-tm)
+            #print(time.time()-tm)
     #print(time.time()-tm)

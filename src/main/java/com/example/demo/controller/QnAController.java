@@ -24,11 +24,7 @@ public class QnAController {
     @PostMapping("/policy")
     public ResponseEntity<QAResult> askPolicyQuestion(@RequestBody Message question) {
         // 调用业务逻辑层方法
-        //Message responseMsg = new Message();
         QAResult responseREsult = qnAService.processPolicyQuestion(question.getContent());
-        System.out.println(String.format("回答: %s", responseREsult.getResult()));
-        System.out.println("参考资料：");
-        System.out.println(responseREsult.getRefMap());
         return ResponseEntity.ok(responseREsult);
     }
 }

@@ -2,11 +2,14 @@ package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import com.example.demo.entity.Message;
+import com.example.demo.entity.QAResult;
 import com.example.demo.service.CaseAnalysisService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/cases")
 public class CaseAnalysisController {
 
@@ -19,9 +22,9 @@ public class CaseAnalysisController {
      * @return 回答结果
      */
     @PostMapping("/analysis")
-    public Message askCaseQuestion(@RequestBody Message question) {
+    public ResponseEntity<QAResult> askCaseQuestion(@RequestBody Message question) {
         // 调用业务逻辑层方法
-        return caseAnalysisService.processCaseQuestion(question);
+        return ResponseEntity.ok(caseAnalysisService.processCaseQuestion(question.getContent()));
     }
 }
 
