@@ -14,6 +14,9 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/policies")
+/**
+ * 政策查询控制器，用于查询用户根据关键词、日期、部门查找的政策
+ */
 public class PolicyController {
 
     @Autowired
@@ -30,17 +33,17 @@ public class PolicyController {
     @GetMapping("/search")
     public ResponseEntity<List<Policy>> searchPolicies(
             @RequestParam(required = false) String keywords,
-            @RequestParam(required = false) Integer departmentNo,
+            @RequestParam(required = false) Integer department,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate publishDate) {
 
         System.out.println("收到政策查询请求");
         System.out.print(String.format("keywords: %s, department: %s, ", 
-        keywords, departmentNo));
+        keywords, department));
         System.out.print("publishDate");
         System.out.println(publishDate);
         
         // 调用业务逻辑层方法
-        return ResponseEntity.ok(policyService.searchPolicies(keywords, departmentNo, publishDate));
+        return ResponseEntity.ok(policyService.searchPolicies(keywords, department, publishDate));
     }
 
 }

@@ -12,6 +12,9 @@ import java.util.List;
 //import java.util.Map;
 
 @Service
+/**
+ * 与python后端交互，提供针对向量数据库的插入和查询操作
+ */
 public class MilvusClientService {
 
     private final RestTemplate restTemplate;

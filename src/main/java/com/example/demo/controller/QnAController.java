@@ -11,6 +11,9 @@ import com.example.demo.service.PolicyQAService;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/qna")
+/**
+ * 政策问答控制器，用于回答用户关于政策的问题
+ */
 public class QnAController {
 
     @Autowired

@@ -10,6 +10,9 @@ import java.sql.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * 政策实体，封装了一个政策
+ */
 public class Policy {
     private Integer id;               // 政策ID
     private String type;              // 类型
@@ -17,15 +20,15 @@ public class Policy {
     private String dayOfTheWeek;      // 星期几
     private String agency;            // 机构
     private String subagency;         // 子机构
-    private String subjectJson;           // 主题（JSON 格式）
-    private String chineseSubject;    // 中文主题（JSON 格式）
+    private String subjectJson;       // 英文主题
+    private String chineseSubject;    // 中文主题
     private String cfr;               // CFR
     private String depdoc;            // DEP DOC
     private String frdoc;             // FR DOC
     private String bilcod;            // BIL COD
-    private String summary;           // 摘要
+    private String summary;           // 英文摘要
     private String chineseSummary;    // 中文摘要 
-    private String content;           // 内容
+    private String content;           // 完整的XML内容
 
     @Override
     public String toString() {

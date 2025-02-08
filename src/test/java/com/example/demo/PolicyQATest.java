@@ -14,7 +14,7 @@ public class PolicyQATest {
     
     @Test
     public void testAsking(){
-        String question = "最近有哪些与大型跨国公司相关的政策";
+        String question = "";
 
         policyQAService.processPolicyQuestion(question);
     }

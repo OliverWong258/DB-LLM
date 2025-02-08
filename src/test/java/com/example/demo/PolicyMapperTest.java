@@ -31,7 +31,7 @@ public class PolicyMapperTest {
     //@Transactional  // 确保测试后数据不会保存在数据库中
     public void testInsertPolicies() {
         
-        String directoryPath = "D:\\Download\\FR-2024\\11\\";
+        String directoryPath = "D:\\Download\\FR-2025\\01\\";
         File directory = new File(directoryPath);
         
         if (directory.exists() && directory.isDirectory()) {

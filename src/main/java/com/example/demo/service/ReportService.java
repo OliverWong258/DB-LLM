@@ -6,6 +6,9 @@ import org.springframework.stereotype.Service;
 import com.example.demo.util.WordGenerator;
 
 @Service
+/**
+ * 生成word文档报告
+ */
 public class ReportService {
 
     /**

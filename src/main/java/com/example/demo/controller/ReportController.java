@@ -18,6 +18,9 @@ import com.example.demo.service.ReportService;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/reports")
+/**
+ * 报告生成控制器，用于生成word文档形式的报告并发给用户
+ */
 public class ReportController {
 
     @Autowired

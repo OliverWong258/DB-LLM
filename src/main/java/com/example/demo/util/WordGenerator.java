@@ -3,6 +3,9 @@ package com.example.demo.util;
 import java.io.*;
 import java.util.UUID;
 
+/**
+ * 调用python脚本来生成word文档的接口
+ */
 public class WordGenerator {
 
     // 静态方法，调用 Python 脚本生成 Word 文档

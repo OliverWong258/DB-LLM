@@ -1,4 +1,4 @@
-# save_word.py
+# 用于生成word文档的脚本
 from docx import Document
 import sys
 

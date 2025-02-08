@@ -20,6 +20,11 @@ import com.example.demo.util.DeleteFilesInDirectory;
 import com.example.demo.util.MilvusClientService;
 
 @Service
+/**
+ * 每日更新mysql数据库和向量数据库的政策数据
+ * 由于联邦公报每天更新的时间是不固定的，因而当日爬取可能会错过更新时间。虽然可以一天爬取多次，但这样产生了不必要的开销。
+ * 因而，我们实际更新的是前一天的政策数据（如1.17号爬取1.16号的），这样也能不断地更新，且不会错过时间。
+ */
 public class DailyUpdateService {
 
     @Autowired
@@ -91,6 +96,7 @@ public class DailyUpdateService {
         }
     }
 
+    // 由于和大模型的交互会产生一些临时的TXT文档，因而需要定期清理
     // 秒 分 时 日 月 周
     @Scheduled(cron = "0 10 13 * * ?")
     public void deleteTXT(){

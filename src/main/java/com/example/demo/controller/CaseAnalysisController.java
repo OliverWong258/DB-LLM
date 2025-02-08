@@ -11,6 +11,9 @@ import com.example.demo.service.CaseAnalysisService;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/cases")
+/**
+ * 案件分析控制器，用于回答用户关于案件信息的问题
+ */
 public class CaseAnalysisController {
 
     @Autowired

@@ -7,8 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 public class TranslateTest {
-    String textPath = "TXTFiles/texts/helloworld.txt";
-    String translatePath = "TXTFiles/translations/transHelloworld.txt";
+    String textPath = "";
+    String translatePath = "";
 
     @Test
     public void HelloWorldTest(){

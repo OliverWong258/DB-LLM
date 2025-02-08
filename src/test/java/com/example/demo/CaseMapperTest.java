@@ -12,6 +12,9 @@ import com.example.demo.util.CaseExtractor;
 
 @SpringBootTest
 @Sql(scripts = "/schema.sql")  // 加载 schema.sql 脚本
+/**
+ * 这个测试类除了测试以外，还可以从TXT文件中提取我们自己搜集的案件信息，并插入到mysql数据库
+ */
 public class CaseMapperTest {
     
     @Autowired

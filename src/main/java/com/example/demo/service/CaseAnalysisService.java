@@ -14,6 +14,9 @@ import com.example.demo.util.MilvusClientService;
 //import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
+/**
+ * 处理案件问答的业务
+ */
 public class CaseAnalysisService {
 
     @Autowired
@@ -29,7 +32,7 @@ public class CaseAnalysisService {
 
         // 调用大模型提取用户问题中的关键信息，用于在向量数据库中搜索
         LLMFileIO keyInfoFileIO = new LLMFileIO();
-        keyInfoFileIO.Write("提取以下内容的关键信息，作为在向量数据库中搜索的关键字。用一行话给出关键字即可，不要分点罗列：\r\n%s".formatted(question));
+        keyInfoFileIO.Write("提取以下内容的关键信息，作为在向量数据库中搜索的关键字。我希望你的回答可以不用修改，直接用于检索：\r\n%s".formatted(question));
         AskUsingApi.ask("no", keyInfoFileIO.requestPath, "", keyInfoFileIO.responsePath);
         String keyInfoStr = keyInfoFileIO.Read();
 
@@ -47,6 +50,7 @@ public class CaseAnalysisService {
         LLMFileIO questFileIO = new LLMFileIO();
         LLMFileIO refFileIO = new LLMFileIO();
 
+        // 将用户的问题和向量数据库提供的参考信息发送给大模型
         questFileIO.Write(question);
         refFileIO.Write(references);
         AskUsingApi.ask("yes", questFileIO.requestPath, refFileIO.requestPath, questFileIO.responsePath);

@@ -14,7 +14,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * 政策或案件问答的返回结果
+ */
 public class QAResult {
-    private String answer;
-    private List<SearchResult> refs;
+    private String answer; // 大模型的回答
+    private List<SearchResult> refs; // 大模型回答所参考的资料
 }

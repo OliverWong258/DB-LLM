@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+/**
+ * 向量数据库的查询结果
+ */
 public class SearchResponse {
     private List<SearchResult> results;
 }

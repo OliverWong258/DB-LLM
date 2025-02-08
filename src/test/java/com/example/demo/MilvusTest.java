@@ -3,6 +3,8 @@ package com.example.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,9 @@ import com.example.demo.entity.*;
 import com.example.demo.util.MilvusClientService;
 
 @SpringBootTest
+/**
+ * 测试与向量数据库相关的操作
+ */
 public class MilvusTest {
 
     @Autowired
@@ -20,9 +25,12 @@ public class MilvusTest {
     private MilvusClientService milvusClientService;
 
     @Test
+    /**
+     * 根据关键信息从向量数据库中搜索相关的内容
+     */
     public void testMilvusSearch(){
 
-        String question = "大型跨国公司";
+        String question = "";
 
         List<SearchResult> searchResults = milvusClientService.searchTexts("policies", question, 5);
         System.out.println("查询结果:");
@@ -31,10 +39,13 @@ public class MilvusTest {
     }
 
     @Test
+    /**
+     * 测试向milvus数据库中插入信息
+     */
     public void testMilvusInsertAllPolicies(){
-        //String dateString = "2025-01-02";
+        String dateString = "";
 
-        List<Policy> policies = policyMapper.searchPolicies(null, null, null);
+        List<Policy> policies = policyMapper.searchPolicies("", "", Date.valueOf(dateString));
 
         List<TextToInsert> textList = new ArrayList<>();
         for (Policy policy:policies){
